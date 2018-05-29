@@ -1,5 +1,6 @@
 package com.example.silahianp1916.mycontactapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,14 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void addData(View view){
+    public void addData(View view) {
         Log.d("MyContactApp", "MainActivity: Add contact button pressed");
 
-        boolean isInserted = myDb.insertData(editName.getText().toString(),editPhone.getText().toString(), editAddress.getText().toString());
-        if(isInserted == true){
+        boolean isInserted = myDb.insertData(editName.getText().toString(), editPhone.getText().toString(), editAddress.getText().toString());
+        if (isInserted == true) {
             Toast.makeText(MainActivity.this, "Success - contact inserted", Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(MainActivity.this, "FAILED - contact not inserted", Toast.LENGTH_LONG).show();
         }
     }
@@ -60,13 +60,21 @@ public class MainActivity extends AppCompatActivity {
         }
         showMessage("Data", buffer.toString());
         Log.d("MyContactApp", buffer.toString());
-        }
     }
     private void showMessage(String title, String message) {
         Log.d("MyContactApp", "MainActivity: showMessage: assembling AlertDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setMessage(message);
+        builder.setTitle(title);
         builder.show();
+    }
 
+    public static final String EXTRA_MESSAGE = "com.example.presleysilahian.mycontactapp.MESSAGE";
+    public void searchRecord(View view){
+        Log.d("MyContactApp", "MainActivity: launching SearchActivity");
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, editName.getText().toString());
+        startActivity(intent);
+    }
 }

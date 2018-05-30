@@ -75,7 +75,29 @@ public class MainActivity extends AppCompatActivity {
     public void searchRecord(View view){
         Log.d("MyContactApp", "MainActivity: launching SearchActivity");
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, editName.getText().toString() + " " + editPhone.getText().toString() + " " + editAddress.getText().toString());
+        StringBuffer buffer = new StringBuffer();
+        Cursor res = myDb.getAllData();
+
+        if (res.getCount()==0){
+            showMessage("Error", "No data found in database");
+            return;
+        }
+
+
+        while (res.moveToNext()){
+            Log.d("MyContactApp", "searchRecord: appending data");
+            if(res.getString(1).equals(editName.getText().toString())){
+                Log.d("MyContactApp", "searchRecord: searchData is True");
+                buffer.append("Name: " + res.getString(1));
+                buffer.append(" /// Phone: " + res.getString(2));
+                buffer.append(" /// Address: " + res.getString(3));
+                buffer.append("\n\n");
+            }
+
+        }
+        showMessage("Data", buffer.toString());
+
+        intent.putExtra(EXTRA_MESSAGE, buffer.toString());
         startActivity(intent);
     }
 }
